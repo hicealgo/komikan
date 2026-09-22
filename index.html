@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Komikán — el pangui y los trewa</title>
+  <meta name="description" content="Komikán: implementación digital y de código abierto del juego tradicional mapuche de estrategia. Juega contra otra persona o contra la IA, o aprende con el tutorial.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="crt-on">
+  <div class="guarda"></div>
+  <header class="app-header">
+    <h1 class="app-title">KOMIKÁN</h1>
+    <p class="app-subtitle">el pangui y los trewa · juego mapuche de estrategia</p>
+  </header>
+
+  <main id="app">
+    <section id="screen-menu" class="screen">
+      <div class="menu-card">
+        <button id="btn-vs-human" class="btn btn-primary btn-block">Dos jugadores (mismo dispositivo)</button>
+        <button id="btn-vs-ai" class="btn btn-primary btn-block">Jugar contra la IA</button>
+
+        <div id="ai-options" class="ai-options" hidden>
+          <label class="field">
+            <span>Dificultad de la IA</span>
+            <select id="select-difficulty">
+              <option value="easy">Fácil</option>
+              <option value="medium" selected>Media</option>
+              <option value="hard">Difícil</option>
+            </select>
+          </label>
+          <fieldset class="field-group">
+            <legend>Quiero jugar como…</legend>
+            <label><input type="radio" name="humanSide" value="puma" checked> Pangui (el puma, 1 ficha)</label>
+            <label><input type="radio" name="humanSide" value="dog"> Trewa (los perros, 12 fichas)</label>
+          </fieldset>
+          <button id="btn-start-ai" class="btn btn-accent btn-block">Comenzar</button>
+        </div>
+
+        <button id="btn-tutorial" class="btn btn-ghost btn-block">Cómo se juega (tutorial)</button>
+      </div>
+
+      <div class="settings-row">
+        <label class="switch"><input type="checkbox" id="toggle-crt"> Efecto CRT</label>
+        <label class="switch"><input type="checkbox" id="toggle-hints"> Pistas (resaltar movimientos legales)</label>
+      </div>
+
+      <p class="menu-footnote">
+        Juego tradicional del pueblo mapuche, de código abierto.
+        Ver <a href="docs/RULES.md">las fuentes y reglas completas</a> ·
+        <a href="docs/ARCHITECTURE.md">cómo funciona el código</a>
+      </p>
+    </section>
+
+    <section id="screen-game" class="screen" hidden>
+      <div class="hud">
+        <div class="hud-turn" id="hud-turn">Turno: Pangui</div>
+        <div class="hud-stats">
+          <span title="Trewa comidos por el pangui">comidos: <strong id="hud-captured">0</strong></span>
+          <span title="Trewa que quedan en el tablero">quedan: <strong id="hud-remaining">12</strong></span>
+        </div>
+        <div class="hud-actions">
+          <button id="btn-end-turn" class="btn btn-accent" hidden>Terminar salto</button>
+          <button id="btn-restart" class="btn btn-ghost">Reiniciar</button>
+          <button id="btn-menu" class="btn btn-ghost">Menú</button>
+        </div>
+      </div>
+
+      <div class="board-wrap">
+        <svg id="board" class="board-svg" role="img" aria-label="Tablero de Komikán: la montaña y el valle"></svg>
+      </div>
+    </section>
+  </main>
+
+  <div id="banner-winner" class="banner" hidden>
+    <div class="banner-card">
+      <p id="banner-text"></p>
+      <div class="banner-actions">
+        <button id="btn-play-again" class="btn btn-primary">Jugar otra vez</button>
+        <button id="btn-back-to-menu" class="btn btn-ghost">Volver al menú</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="tutorial-overlay" class="tutorial-overlay" hidden></div>
+
+  <div class="guarda"></div>
+  <footer class="app-footer">
+    <p>Código abierto, inspirado en el juego tradicional mapuche Komikán. <a href="docs/RULES.md">Fuentes y variantes históricas.</a></p>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

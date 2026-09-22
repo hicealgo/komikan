@@ -1,0 +1,313 @@
+/*
+ * styles.css — "modern fake retro": a CRT-terminal shell (scanlines,
+ * vignette, phosphor glow) built entirely in CSS, wrapped around a
+ * warm, earthy palette and a geometric zig-zag border band inspired by
+ * Mapuche textile guardas (a generic, purely decorative motif — diamonds
+ * and chevrons, no sacred or ceremonial imagery).
+ *
+ * No build step: this is plain CSS loaded directly by index.html.
+ */
+
+:root {
+  --bg-deep: #171009;
+  --bg-panel: #241a10;
+  --bg-panel-raised: #2e2114;
+  --ink: #f2e6cd;
+  --ink-dim: #c9b998;
+  --accent-gold: #e0a23d;   /* pangui / puma */
+  --accent-teal: #3f9c93;   /* trewa / dogs */
+  --accent-red: #c0432f;    /* capture / danger */
+  --accent-green: #5c8a52;  /* valley */
+  --line-color: #8a6b3f;
+  --socket-valley: #d8c69c;
+  --socket-mountain: #9fb4ac;
+  --radius: 10px;
+  --shadow-hard: 0 3px 0 #000, 0 6px 12px rgba(0, 0, 0, 0.45);
+}
+
+* { box-sizing: border-box; }
+
+/* Several elements below set their own `display` for when they're shown,
+   which would otherwise win over the UA stylesheet's [hidden] rule. */
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg-deep);
+  color: var(--ink);
+}
+
+body {
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 19px;
+  line-height: 1.35;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+h1, h2, .btn, .hud-turn, .tutorial-title {
+  font-family: 'Press Start 2P', 'VT323', monospace;
+}
+
+a { color: var(--accent-teal); }
+
+/* ---------------------------------------------------------------------
+ * CRT shell: a fixed full-viewport overlay carrying scanlines + vignette
+ * + a very slow flicker. Pointer-events:none so it never blocks clicks.
+ * Toggled by body.crt-on, so turning it off removes all three at once.
+ * ------------------------------------------------------------------- */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 0px, rgba(0, 0, 0, 0.22) 1px, transparent 2px, transparent 4px),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+  mix-blend-mode: multiply;
+  transition: opacity 0.2s;
+}
+body.crt-on::before {
+  opacity: 1;
+  animation: crt-flicker 6s infinite;
+}
+@keyframes crt-flicker {
+  0%, 96%, 100% { opacity: 1; }
+  97% { opacity: 0.92; }
+  98% { opacity: 1; }
+}
+
+/* ---------------------------------------------------------------------
+ * Decorative guarda band: a chevron/diamond strip, pure CSS, no images.
+ * ------------------------------------------------------------------- */
+.guarda {
+  height: 12px;
+  background:
+    repeating-linear-gradient(45deg, var(--accent-gold) 0 6px, transparent 6px 12px),
+    repeating-linear-gradient(-45deg, var(--accent-teal) 0 6px, transparent 6px 12px);
+  background-size: 24px 12px;
+  opacity: 0.85;
+}
+
+.app-header {
+  text-align: center;
+  padding: 18px 12px 10px;
+  background: var(--bg-panel);
+  border-bottom: 3px solid var(--line-color);
+}
+.app-title {
+  margin: 0;
+  font-size: clamp(22px, 6vw, 34px);
+  letter-spacing: 2px;
+  color: var(--accent-gold);
+  text-shadow: 2px 0 0 var(--accent-red), -2px 0 0 var(--accent-teal); /* cheap chromatic-aberration */
+}
+.app-subtitle {
+  margin: 8px 0 0;
+  color: var(--ink-dim);
+  font-size: 15px;
+}
+
+.app-footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 14px;
+  color: var(--ink-dim);
+  font-size: 14px;
+  background: var(--bg-panel);
+  border-top: 3px solid var(--line-color);
+}
+
+#app { flex: 1; display: flex; justify-content: center; padding: 18px 12px 30px; }
+.screen { width: 100%; max-width: 900px; }
+
+/* ---- Menu ---- */
+.menu-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--bg-panel);
+  border: 3px solid var(--line-color);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-hard);
+}
+.btn {
+  font-size: 14px;
+  padding: 14px 16px;
+  border: 3px solid #000;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #1a1204;
+  background: var(--ink-dim);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.5);
+  transition: transform 0.06s ease-out;
+}
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.5); }
+.btn-primary { background: var(--accent-gold); }
+.btn-accent { background: var(--accent-teal); color: #08211f; }
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--line-color); }
+.btn-block { width: 100%; }
+
+.ai-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background: var(--bg-panel-raised);
+  border: 2px dashed var(--line-color);
+  border-radius: 8px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+.field select { font-family: inherit; font-size: 16px; padding: 8px; background: var(--bg-deep); color: var(--ink); border: 2px solid var(--line-color); border-radius: 6px; }
+.field-group { border: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.field-group legend { padding: 0; font-size: 14px; color: var(--ink-dim); margin-bottom: 4px; }
+.field-group label { display: flex; align-items: center; gap: 8px; font-size: 16px; }
+
+.settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 16px;
+  font-size: 15px;
+}
+.switch { display: flex; align-items: center; gap: 8px; }
+
+.menu-footnote {
+  text-align: center;
+  color: var(--ink-dim);
+  font-size: 14px;
+  margin-top: 18px;
+}
+
+/* ---- Game screen ---- */
+.hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-panel);
+  border: 3px solid var(--line-color);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 14px;
+}
+.hud-turn { font-size: 12px; color: var(--accent-gold); }
+.hud-stats { display: flex; gap: 14px; font-size: 16px; }
+.hud-actions { display: flex; gap: 8px; }
+.hud-actions .btn { padding: 10px 12px; font-size: 12px; }
+
+.board-wrap {
+  background: var(--bg-panel);
+  border: 3px solid var(--line-color);
+  border-radius: var(--radius);
+  padding: 10px;
+  box-shadow: var(--shadow-hard);
+}
+.board-svg { width: 100%; height: auto; display: block; touch-action: manipulation; }
+
+.board-edge { stroke: var(--line-color); stroke-width: 3; }
+.board-socket {
+  fill: rgba(0, 0, 0, 0.15);
+  stroke: var(--line-color);
+  stroke-width: 2;
+  cursor: pointer;
+  transition: fill 0.12s, stroke 0.12s, r 0.12s;
+}
+.board-socket--valley { fill: color-mix(in srgb, var(--socket-valley) 18%, transparent); }
+.board-socket--mountain { fill: color-mix(in srgb, var(--socket-mountain) 18%, transparent); }
+.board-socket.is-selected { stroke: var(--accent-gold); stroke-width: 4; }
+.board-socket.is-legal-move { fill: color-mix(in srgb, var(--accent-teal) 45%, transparent); stroke: var(--accent-teal); }
+.board-socket.is-legal-jump { fill: color-mix(in srgb, var(--accent-red) 55%, transparent); stroke: var(--accent-red); animation: pulse-jump 1s infinite; }
+.board-socket.is-captured { animation: pulse-capture 0.45s ease-out; }
+@keyframes pulse-jump { 0%, 100% { r: 23; } 50% { r: 27; } }
+@keyframes pulse-capture { 0% { fill: var(--accent-red); r: 34; } 100% { fill: transparent; r: 23; } }
+
+.piece { cursor: pointer; }
+.piece-base--puma { fill: var(--accent-gold); stroke: #3a2705; stroke-width: 2; }
+.piece-base--dog { fill: var(--accent-teal); stroke: #082623; stroke-width: 2; }
+.piece.is-selected .piece-base { filter: drop-shadow(0 0 6px currentColor); }
+.piece-pixel { fill: #1a1204; }
+.piece-glyph--puma .piece-pixel { fill: #3a2705; }
+.piece-glyph--dog .piece-pixel { fill: #082623; }
+
+/* ---- Win banner ---- */
+.banner {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+}
+.banner-card {
+  background: var(--bg-panel);
+  border: 3px solid var(--accent-gold);
+  border-radius: var(--radius);
+  padding: 24px;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: var(--shadow-hard);
+}
+.banner-actions { display: flex; gap: 10px; margin-top: 16px; }
+.banner-actions .btn { flex: 1; }
+
+/* ---- Tutorial overlay ---- */
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.tutorial-card {
+  position: relative;
+  background: var(--bg-panel);
+  border: 3px solid var(--line-color);
+  border-radius: var(--radius);
+  padding: 24px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-hard);
+}
+.tutorial-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--ink-dim);
+  font-size: 22px;
+  cursor: pointer;
+}
+.tutorial-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 14px; }
+.tutorial-dots .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line-color); }
+.tutorial-dots .dot.is-active { background: var(--accent-gold); }
+.tutorial-title { font-size: 15px; color: var(--accent-gold); margin: 0 0 12px; text-align: center; }
+.tutorial-body { font-size: 17px; margin-bottom: 14px; }
+.tutorial-demo { width: 100%; max-height: 260px; margin-bottom: 14px; }
+.tutorial-nav { display: flex; justify-content: space-between; gap: 10px; }
+.tutorial-nav .btn:disabled { opacity: 0.4; cursor: default; }
+.tutorial-practice { text-align: center; }
+.tutorial-practice-buttons { display: flex; gap: 10px; margin-top: 10px; }
+.tutorial-practice-buttons .btn { flex: 1; }
+
+@media (min-width: 640px) {
+  body { font-size: 20px; }
+  .hud-turn { font-size: 14px; }
+}
