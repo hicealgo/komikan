@@ -10,7 +10,7 @@ a short interactive tutorial.
 No installation, no account, no build step. It's a static site — open
 `index.html`, or visit it hosted on GitHub Pages.
 
-**[▶ Play it](#deploying-to-github-pages)** (fill in your Pages URL once deployed)
+**[▶ Play it](https://heelgueta.github.io/komikan/)**
 
 ![status](https://img.shields.io/badge/status-playable-brightgreen)
 ![license](https://img.shields.io/badge/license-MIT-blue)
@@ -70,7 +70,10 @@ returns an illegal move at any difficulty.
 
 ## Deploying to GitHub Pages
 
-1. Push this folder to a GitHub repository.
+Already live for this repo at <https://heelgueta.github.io/komikan/>. To
+do the same for a fork:
+
+1. Push the folder to a GitHub repository.
 2. In the repo's Settings → Pages, set the source to the `main` branch,
    root folder.
 3. Your game will be live at `https://<username>.github.io/<repo>/`.
