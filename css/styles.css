@@ -219,7 +219,9 @@ body::after {
   padding: 12px 16px;
   margin-bottom: 14px;
 }
-.hud-turn { font-size: 12px; color: var(--accent-gold); }
+.hud-turn { font-size: 12px; color: var(--ink); }
+.hud-turn--puma { color: var(--accent-gold); }
+.hud-turn--dog { color: var(--accent-teal); }
 .hud-stats { display: flex; gap: 14px; font-size: 16px; }
 .hud-actions { display: flex; gap: 8px; }
 .hud-actions .btn { padding: 10px 12px; font-size: 12px; }
@@ -273,6 +275,12 @@ body::after {
   animation: ring-spin 3s linear infinite;
 }
 .piece.is-selected .piece-base { filter: drop-shadow(0 0 6px var(--select-color)); }
+/* Trewa to move, nothing picked yet: the dogs breathe a soft glow. */
+.board-svg.is-picking-dog .piece--dog:not(.is-selected) .piece-base { animation: pick-nudge 1.8s ease-in-out infinite; }
+@keyframes pick-nudge {
+  0%, 100% { filter: drop-shadow(0 0 0 transparent); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 5px var(--accent-teal)); transform: scale(1.07); }
+}
 @keyframes ring-spin { to { transform: rotate(360deg); } }
 
 /* ---- Win banner ---- */
@@ -395,7 +403,8 @@ body.in-game .board-svg { height: 100%; width: auto; max-width: 100%; min-height
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body::before, .piece-glyph, .piece-ring, .board-socket.is-legal-jump { animation: none; }
+  body::before, .piece-glyph, .piece-ring, .board-socket.is-legal-jump,
+  .board-svg.is-picking-dog .piece--dog .piece-base { animation: none; }
 }
 
 @media (min-width: 640px) {

@@ -180,9 +180,20 @@ function startGame(config) {
       els.hudTurn.textContent = t(state.turn === 'puma' ? 'hud.aiPuma' : 'hud.aiDog');
     } else {
       const who = t(state.turn === 'puma' ? 'hud.puma' : 'hud.dog');
-      const control = t(isHumanTurn(state.turn) ? 'hud.you' : 'hud.ai');
+      // On the trewa's turn, before any dog is picked, nudge: "(pick one)".
+      const picking = state.turn === 'dog' && isHumanTurn('dog') && !selected;
+      const control = t(picking ? 'hud.pick' : isHumanTurn(state.turn) ? 'hud.you' : 'hud.ai');
       els.hudTurn.textContent = t('hud.turn', { who, control });
     }
+    paintTurn();
+  }
+
+  function paintTurn() {
+    // Turn text takes the colour of the side to move (same as their pieces).
+    els.hudTurn.classList.toggle('hud-turn--puma', !state.winner && state.turn === 'puma');
+    els.hudTurn.classList.toggle('hud-turn--dog', !state.winner && state.turn === 'dog');
+    els.board.classList.toggle('is-picking-dog',
+      !state.winner && !aiThinking && state.turn === 'dog' && isHumanTurn('dog') && !selected);
   }
 
   function maybeShowWinner() {
