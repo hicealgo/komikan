@@ -140,6 +140,7 @@ export class BoardView {
         transform: `translate(${x}, ${y})`,
         'data-node': nodeId,
       });
+      if (nodeId === selected) g.appendChild(el('circle', { r: PIECE_RADIUS + 6, class: 'piece-ring' }));
       g.appendChild(el('circle', { r: PIECE_RADIUS, class: `piece-base piece-base--${kind}` }));
       g.appendChild(buildGlyph(kind));
       g.addEventListener('click', (e) => { e.stopPropagation(); this.onNodeClick(nodeId); });

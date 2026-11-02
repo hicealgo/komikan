@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Komikán — laboratorio visual (temporal)</title>
+  <link rel="stylesheet" href="lab.css">
+</head>
+<body>
+  <aside id="panel" class="panel">
+    <header class="panel-head">
+      <strong>Laboratorio visual</strong>
+      <span class="tag">temporal</span>
+      <button id="btn-collapse" class="mini" title="Ocultar panel">«</button>
+    </header>
+    <div class="panel-actions">
+      <button id="btn-reset" class="mini">Restablecer</button>
+      <button id="btn-random" class="mini">🎲 Sorpréndeme</button>
+      <button id="btn-copy" class="mini primary">Copiar mi elección</button>
+    </div>
+    <p class="hint">Juega en el recuadro de la derecha (menú, partida y tutorial). Todo cambia en vivo. Cuando te guste algo, pulsa <em>Copiar mi elección</em> y pégamelo.</p>
+    <div id="controls"></div>
+    <details class="credits">
+      <summary>Sobre las paletas</summary>
+      <p>Inspiradas en los tonos de la textilería mapuche (lana cruda, negro y café de lana natural, rojos de tintes vegetales y de cochinilla, azul añil, violeta de maqui, amarillo de chilco) y en la platería. Son referencias de color genéricas y respetuosas: sin símbolos sagrados ni ceremoniales, y sin la bandera.</p>
+    </details>
+  </aside>
+  <button id="btn-expand" class="mini expand" hidden title="Mostrar panel">»</button>
+  <main class="stage">
+    <iframe id="game" src="../index.html" title="Komikán"></iframe>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script type="module" src="lab.js"></script>
+</body>
+</html>

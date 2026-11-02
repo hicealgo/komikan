@@ -23,23 +23,16 @@
  * exact same move-generation code serve the UI and the AI search.
  */
 
-import { neighborsOf, jumpLanding, valleyId } from './board.js';
+import { neighborsOf, jumpLanding, idAt, START } from './board.js';
 
 export const DEFAULT_WIN_THRESHOLD = 9; // puma wins on capturing 9 of 12 dogs
 
 export function createInitialState(winThreshold = DEFAULT_WIN_THRESHOLD) {
   const pieces = new Map();
 
-  // Puma starts deep in the mountain.
-  pieces.set('t1_2', 'puma');
-
-  // Dogs start at the valley's far edge (away from the mountain pass):
-  // the two corners of row 1, and both of rows 3 and 4 in full.
-  const dogStarts = [
-    valleyId(1, 0), valleyId(1, 4),
-    valleyId(3, 0), valleyId(3, 1), valleyId(3, 2), valleyId(3, 3), valleyId(3, 4),
-    valleyId(4, 0), valleyId(4, 1), valleyId(4, 2), valleyId(4, 3), valleyId(4, 4),
-  ];
+  // Start positions live in board.js, next to the geometry they refer to.
+  pieces.set(idAt(...START.puma), 'puma');
+  const dogStarts = START.dogs.map((p) => idAt(...p));
   for (const id of dogStarts) pieces.set(id, 'dog');
 
   return {

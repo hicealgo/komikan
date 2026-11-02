@@ -140,7 +140,10 @@ function startGame(config) {
     const jumpTargets = selected ? targetsFrom(selected).filter((a) => a.type === 'jump').map((a) => a.to) : [];
 
     view.render(state, {
-      selected: hintsOn || state.turn === 'puma' ? selected : null,
+      // The selected piece always lights up, even with hints off: hints only
+      // control whether the legal destinations are shown, not whether you
+      // can see which piece you picked up.
+      selected,
       legalMoves: hintsOn ? moveTargets : [],
       legalJumps: hintsOn ? jumpTargets : [],
     });

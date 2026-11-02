@@ -10,7 +10,9 @@
  */
 
 import { BoardView } from './ui.js';
-import { neighborsOf, jumpLanding } from './board.js';
+import { neighborsOf, jumpLanding, idAt } from './board.js';
+
+const PUMA_HOME = idAt(0, -4);
 
 function demoState(entries) {
   return { pieces: new Map(entries) };
@@ -33,7 +35,7 @@ const SLIDES = [
       (el triángulo, arriba) y el <strong>valle</strong> (el cuadrado, abajo, donde
       está la ruka). El pangui empieza en la montaña; los doce trewa empiezan
       en el extremo más lejano del valle.`,
-    demo: () => demoState([['t1_2', 'puma']]),
+    demo: () => demoState([[PUMA_HOME, 'puma']]),
   },
   {
     title: 'Cómo se mueven',
@@ -42,8 +44,8 @@ const SLIDES = [
       diagonal. El pangui y los trewa se mueven igual; la diferencia está en
       lo que pueden hacer al llegar. Prueba: los puntos resaltados son todos
       los movimientos posibles desde aquí.`,
-    demo: () => demoState([['t1_2', 'puma']]),
-    highlightMovesFrom: 't1_2',
+    demo: () => demoState([[PUMA_HOME, 'puma']]),
+    highlightMovesFrom: PUMA_HOME,
   },
   {
     title: 'La cacería',
@@ -51,8 +53,8 @@ const SLIDES = [
       junto a él y el punto siguiente está vacío, el pangui salta por encima
       y se lo come — igual que en las damas. Los trewa nunca pueden comerse
       al pangui, solo bloquearlo.`,
-    demo: () => demoState([['s_2_2', 'puma'], ['s_1_2', 'dog']]),
-    highlightJumpFrom: 's_2_2',
+    demo: () => demoState([[idAt(0, 6), 'puma'], [idAt(0, 3), 'dog']]),
+    highlightJumpFrom: idAt(0, 6),
   },
   {
     title: 'Saltos encadenados',
@@ -60,8 +62,8 @@ const SLIDES = [
       puede seguir comiendo en el mismo turno — incluso <strong>cambiando de
       dirección</strong>. En este ejemplo, el pangui puede saltar hacia el norte y
       luego, sin perder el turno, seguir hacia el este.`,
-    demo: () => demoState([['s_2_2', 'puma'], ['s_1_2', 'dog'], ['s_0_3', 'dog']]),
-    highlightJumpFrom: 's_2_2',
+    demo: () => demoState([[idAt(0, 6), 'puma'], [idAt(0, 3), 'dog'], [idAt(3, 0), 'dog']]),
+    highlightJumpFrom: idAt(0, 6),
   },
   {
     title: 'Cómo se gana',
