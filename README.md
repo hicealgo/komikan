@@ -7,7 +7,7 @@
 ![status](https://img.shields.io/badge/status-playable-brightgreen)
 ![license](https://img.shields.io/badge/license-AGPLv3-blue)
 
-**[▶ Jugar / Play](https://heelgueta.github.io/komikan/)** · [Repositorio / Repository](https://github.com/heelgueta/komikan)
+**[▶ Jugar / Play](https://hicealgo.github.io/komikan/)** · [Repositorio / Repository](https://github.com/hicealgo/komikan)
 
 ---
 

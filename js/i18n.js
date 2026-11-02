@@ -7,7 +7,7 @@
  * Spanish is the original language of the game, so it is the fallback.
  */
 
-export const REPO_URL = 'https://github.com/heelgueta/komikan';
+export const REPO_URL = 'https://github.com/hicealgo/komikan';
 const DOC_BASE = `${REPO_URL}/blob/main/docs`;
 
 const STRINGS = {

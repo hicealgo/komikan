@@ -33,11 +33,11 @@ sin nombre, sin correo, sin IP), la hora de inicio/fin, la duración, **cada jug
 4. **Configuración del proyecto (⚙) → Tus apps → `</>` Web** → registra la app (sin Hosting) → copia
    el `firebaseConfig`.
 5. **Compilación → Authentication → Comenzar → Método de acceso → Google → Habilitar**.
-   Luego **Configuración → Dominios autorizados → Agregar dominio**: `heelgueta.github.io` (y `localhost`
+   Luego **Configuración → Dominios autorizados → Agregar dominio**: `hicealgo.github.io` (y `localhost`
    ya viene). Esto es lo que permite entrar al panel de administración.
 6. Pega el config en `js/firebase-config.js`, haz commit y push. Juega una partida en el sitio y verás
    el documento aparecer en Firestore → `games`.
-7. Panel: abre `https://heelgueta.github.io/komikan/admin/` → **Entrar con Google** con la cuenta
+7. Panel: abre `https://hicealgo.github.io/komikan/admin/` → **Entrar con Google** con la cuenta
    administradora. Verás estadísticas y podrás **repetir cualquier partida** (con los tiempos reales).
 
 Con la CLI (alternativa al paso 3): `npm i -g firebase-tools`, luego en una terminal `firebase login`
@@ -82,10 +82,10 @@ its timestamp** (ms since start) and the result. Nothing else. Players can turn 
 3. **Rules** tab → paste `firebase/firestore.rules` (with your e-mail) → **Publish**.
 4. **Project settings (⚙) → Your apps → `</>` Web** → register (skip Hosting) → copy `firebaseConfig`.
 5. **Build → Authentication → Get started → Sign-in method → Google → Enable**; then
-   **Settings → Authorized domains → Add** `heelgueta.github.io` (`localhost` is already there).
+   **Settings → Authorized domains → Add** `hicealgo.github.io` (`localhost` is already there).
 6. Paste the config into `js/firebase-config.js`, commit and push. Play a game on the site and the
    document appears under Firestore → `games`.
-7. Dashboard: open `https://heelgueta.github.io/komikan/admin/` → **Sign in with Google** as the admin.
+7. Dashboard: open `https://hicealgo.github.io/komikan/admin/` → **Sign in with Google** as the admin.
    You get overall stats and can **replay any game** with its real timing.
 
 CLI alternative for step 3: `npm i -g firebase-tools`, `firebase login` (interactive — in Claude Code
