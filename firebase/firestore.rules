@@ -1,0 +1,56 @@
+rules_version = '2';
+
+// Komikán anonymous game log.
+//  - Anyone (no login) may CREATE a game document and keep UPDATING it until it is marked finished.
+//  - Nobody can read, list or delete from the public site.
+//  - Only the admin Google account can read everything (admin/index.html) and delete.
+// Replace the e-mail below with the admin's verified Google account (and in js/firebase-config.js).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'hermanelgueta@gmail.com';
+    }
+
+    function validGame(d) {
+      return d.keys().hasOnly([
+          'v', 'device', 'mode', 'humanSide', 'difficulty', 'hints', 'lang', 'theme', 'viewport',
+          'startedAt', 'endedAt', 'durationMs', 'finished', 'winner', 'reason', 'captured', 'plies',
+          'moves', 'createdAt'
+        ])
+        && d.v == 1
+        && d.device is string && d.device.size() <= 64
+        && d.mode in ['human', 'ai']
+        && (d.humanSide == null || d.humanSide in ['puma', 'dog'])
+        && (d.difficulty == null || d.difficulty in ['easy', 'medium', 'hard'])
+        && d.hints is bool
+        && d.lang in ['es', 'en']
+        && d.theme in ['light', 'dark']
+        && d.viewport in ['phone', 'tablet', 'desktop']
+        && d.startedAt is number
+        && d.finished is bool
+        && (d.winner == null || d.winner in ['puma', 'dog'])
+        && (d.reason == null || d.reason in ['eaten', 'trapped', 'dogs_stuck'])
+        && d.captured is number && d.captured >= 0 && d.captured <= 12
+        && d.plies is number
+        && d.moves is list && d.moves.size() <= 600;
+    }
+
+    match /games/{gameId} {
+      allow read, delete: if isAdmin();
+
+      allow create: if validGame(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+
+      // Updates may only append to an unfinished game from the same device.
+      allow update: if validGame(request.resource.data)
+        && resource.data.finished == false
+        && request.resource.data.device == resource.data.device
+        && request.resource.data.startedAt == resource.data.startedAt
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.moves.size() >= resource.data.moves.size();
+    }
+  }
+}

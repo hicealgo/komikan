@@ -1,0 +1,27 @@
+body.admin { display: block; padding: 12px; min-height: 100vh; font-size: 17px; }
+body.admin::before, body.admin::after { display: none; } /* no CRT overlay while reading data */
+.adm-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.adm-bar h1 { font-size: 16px; margin: 0; flex: 1; }
+.who { color: var(--ink-dim); font-size: 15px; }
+.adm-msg { color: var(--accent-red); min-height: 1.4em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.card { background: var(--bg-panel); border: 3px solid var(--line-color); border-radius: var(--radius); padding: 10px 12px; }
+.card b { display: block; font-family: var(--font-head); font-size: 18px; color: var(--accent-gold); margin-bottom: 4px; }
+.card span { color: var(--ink-dim); font-size: 14px; }
+.cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+.panel { background: var(--bg-panel); border: 3px solid var(--line-color); border-radius: var(--radius); padding: 12px; }
+.panel h2 { font-size: 13px; margin: 0 0 10px; }
+.filters { display: flex; gap: 12px; margin-bottom: 8px; font-size: 14px; }
+.filters select, #rp-speed { font: inherit; background: var(--bg-deep); color: var(--ink); border: 2px solid var(--line-color); border-radius: 6px; padding: 4px; }
+.table-wrap { max-height: 70vh; overflow: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--line-color); white-space: nowrap; }
+tbody tr { cursor: pointer; }
+tbody tr:hover, tbody tr.sel { background: var(--bg-panel-raised); }
+.rp-info, .rp-hud { font-size: 14px; color: var(--ink-dim); margin: 0 0 6px; }
+.rp-board { max-height: 60vh; }
+.rp-board .board-svg { height: 52vh; width: auto; max-width: 100%; margin: 0 auto; }
+.rp-controls { display: flex; gap: 8px; align-items: center; justify-content: center; margin: 10px 0 6px; }
+.rp-controls .btn { padding: 8px 12px; font-size: 12px; }
+#rp-slider { width: 100%; }

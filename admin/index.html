@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Komikán — admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin">
+  <header class="adm-bar">
+    <h1>Komikán · admin</h1>
+    <span id="who" class="who"></span>
+    <button id="btn-signin" class="btn btn-primary">Entrar con Google</button>
+    <button id="btn-signout" class="btn btn-ghost" hidden>Salir</button>
+  </header>
+  <p id="msg" class="adm-msg"></p>
+
+  <section id="dash" hidden>
+    <div id="cards" class="cards"></div>
+    <div class="cols">
+      <div class="panel">
+        <h2>Partidas recientes</h2>
+        <div class="filters">
+          <label>Modo <select id="f-mode"><option value="">todos</option><option value="human">2 jugadores</option><option value="ai">vs IA</option></select></label>
+          <label>Resultado <select id="f-res"><option value="">todos</option><option value="puma">gana pangui</option><option value="dog">gana trewa</option><option value="none">sin terminar</option></select></label>
+        </div>
+        <div class="table-wrap"><table id="tbl"></table></div>
+      </div>
+      <div class="panel">
+        <h2>Repetición</h2>
+        <p id="rp-info" class="rp-info">Elige una partida de la lista.</p>
+        <div id="rp-hud" class="rp-hud"></div>
+        <div class="board-wrap rp-board"><svg id="board" class="board-svg" role="img"></svg></div>
+        <div class="rp-controls">
+          <button id="rp-prev" class="btn btn-ghost">◀</button>
+          <button id="rp-play" class="btn btn-primary">▶</button>
+          <button id="rp-next" class="btn btn-ghost">▶|</button>
+          <select id="rp-speed"><option value="1">tiempo real</option><option value="4" selected>×4</option><option value="16">×16</option><option value="0">1 jugada/seg</option></select>
+        </div>
+        <input id="rp-slider" type="range" min="0" max="0" value="0">
+      </div>
+    </div>
+  </section>
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

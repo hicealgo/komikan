@@ -17,9 +17,13 @@ js/
   ui.js               dibuja el tablero en <svg> y traduce clics a nodos
   tutorial.js          las diapositivas de introducción (reutiliza ui.js)
   i18n.js             textos en español/inglés y cambio de idioma
+  telemetry.js        registro anónimo opcional de partidas (Firestore), apagado si no se configura
+  firebase-config.js  config web de Firebase + correo admin
   main.js             la aplicación: une menú, HUD y turnos de la IA
 tests/run.mjs         pruebas sin dependencias (`npm test`)
 test/                 laboratorio visual DESACTIVADO por defecto (ver test/README.md)
+admin/                panel privado + repetición de partidas (Firebase; ver docs/FIREBASE.md)
+firebase/             reglas de seguridad de Firestore
 docs/
   RULES.md / RULES.es.md                reglas del juego + fuentes históricas
   ARCHITECTURE.md / ARCHITECTURE.es.md  este archivo

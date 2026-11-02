@@ -6,13 +6,14 @@
  */
 
 import { createInitialState, getLegalActions, applyAction, dogsRemaining, pieceAt } from './gameState.js';
-import { chooseAiAction } from './ai.js';
+import { chooseAiAction, positionKey } from './ai.js';
 import { BoardView } from './ui.js';
 import { Tutorial } from './tutorial.js';
+import { GameLogger, telemetryAvailable } from './telemetry.js';
 import { t, setLang, getLang, detectLang, onLangChange } from './i18n.js';
 
 const SETTINGS_KEY = 'komikan-settings-v1';
-const defaultSettings = { hints: true, difficulty: 'medium', theme: 'light', lang: null };
+const defaultSettings = { hints: true, difficulty: 'medium', theme: 'light', lang: null, share: true };
 
 function loadSettings() {
   try {
@@ -40,6 +41,7 @@ const els = {
   langEn: document.getElementById('lang-en'),
   btnTheme: document.getElementById('btn-theme'),
   toggleHints: document.getElementById('toggle-hints'),
+  toggleShare: document.getElementById('toggle-share'),
   board: document.getElementById('board'),
   hudTurn: document.getElementById('hud-turn'),
   hudCaptured: document.getElementById('hud-captured'),
@@ -55,6 +57,13 @@ const els = {
 };
 
 els.toggleHints.checked = settings.hints;
+// The sharing switch only exists when anonymous logging is configured (js/firebase-config.js).
+els.toggleShare.checked = settings.share;
+els.toggleShare.closest('.switch').hidden = !telemetryAvailable;
+els.toggleShare.addEventListener('change', () => { settings.share = els.toggleShare.checked; saveSettings(settings); });
+
+let activeLogger = null; // logger of the match on screen, closed when it ends or is left
+let activeState = null;
 els.selectDifficulty.value = settings.difficulty;
 
 let game = null; // the live controller for the current match, see startGame()
@@ -110,7 +119,7 @@ els.btnStartAi.addEventListener('click', () => {
   const humanSide = document.querySelector('input[name="humanSide"]:checked').value;
   startGame({ mode: 'ai', humanSide, difficulty: settings.difficulty });
 });
-els.btnMenu.addEventListener('click', () => showScreen('menu'));
+els.btnMenu.addEventListener('click', () => { activeLogger?.abandon(activeState); showScreen('menu'); });
 els.btnBackToMenu.addEventListener('click', () => { els.banner.hidden = true; showScreen('menu'); });
 els.btnRestart.addEventListener('click', () => game && startGame(game.config));
 els.btnPlayAgain.addEventListener('click', () => { els.banner.hidden = true; game && startGame(game.config); });
@@ -132,6 +141,7 @@ const WIN_MESSAGES = {
 };
 
 function startGame(config) {
+  activeLogger?.abandon(activeState); // restarting counts as leaving the previous match
   showScreen('game');
   els.banner.hidden = true;
 
@@ -140,6 +150,11 @@ function startGame(config) {
   let hintsOn = config.forceHints || settings.hints;
 
   let state = state0;
+  const history = [positionKey(state0)]; // positions seen so far: lets the AI avoid shuffling back and forth
+  const logger = new GameLogger(settings.share);
+  logger.start({ mode: config.mode, humanSide: config.humanSide ?? null, difficulty: config.difficulty ?? null, hints: hintsOn, lang: getLang(), theme: settings.theme });
+  activeLogger = logger;
+  activeState = state0;
   let selected = null;
   let aiThinking = false;
 
@@ -198,12 +213,15 @@ function startGame(config) {
 
   function maybeShowWinner() {
     if (!state.winner) return false;
+    logger.end(state);
     els.banner.hidden = false;
     els.bannerText.textContent = WIN_MESSAGES[state.winReason]?.(state) ?? t('win.over');
     return true;
   }
 
   function afterStateChange() {
+    activeState = state;
+    history.push(positionKey(state));
     autoSelectPuma();
     if (state.turn === 'dog') selected = null;
     render();
@@ -215,14 +233,15 @@ function startGame(config) {
     aiThinking = true;
     render();
     setTimeout(() => {
-      const action = chooseAiAction(state, config.difficulty ?? 'medium');
+      const action = chooseAiAction(state, config.difficulty ?? 'medium', history);
       aiThinking = false;
-      if (action) state = applyAction(state, action);
+      if (action) { logger.move(action, state.turn, true); state = applyAction(state, action); }
       afterStateChange();
     }, 260 + Math.random() * 260); // a small delay reads as "thinking" rather than instant/robotic
   }
 
   function performAction(action) {
+    logger.move(action, state.turn, false);
     state = applyAction(state, action);
     afterStateChange();
   }

@@ -52,6 +52,12 @@ Cómo funciona el código: [`docs/ARCHITECTURE.es.md`](docs/ARCHITECTURE.es.md).
   oscuro («añil») y activar o no las pistas. Las preferencias se guardan en tu
   navegador (`localStorage`) y nunca se envían a ningún sitio.
 
+### Datos y privacidad
+
+Las preferencias (idioma, tema, pistas) se guardan en tu navegador. Si quien administra este sitio activa el
+registro de partidas, se guardan **de forma anónima** las jugadas y su duración (sin cuenta, nombre, correo ni IP)
+para estudiar cómo se juega; puedes desactivarlo en el menú. Detalles en [`docs/FIREBASE.md`](docs/FIREBASE.md).
+
 ### Licencia
 
 AGPLv3 — ver [`LICENSE`](LICENSE). El juego en sí es patrimonio cultural mapuche
@@ -98,6 +104,12 @@ works: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 - From the menu you can switch language (ES/EN), light ("lana cruda") or dark
   ("añil") mode, and turn hints on or off. Preferences live in your browser
   (`localStorage`) and are never sent anywhere.
+
+### Data and privacy
+
+Preferences (language, theme, hints) live in your browser. If the site's admin enables game logging, moves and
+durations are stored **anonymously** (no account, name, e-mail or IP) to study how the game is played; you can
+switch it off in the menu. Details in [`docs/FIREBASE.md`](docs/FIREBASE.md#english).
 
 ### License
 

@@ -18,9 +18,13 @@ js/
   ui.js               renders the board to <svg>, turns clicks into node ids
   tutorial.js          the onboarding slides (reuses ui.js for live demos)
   i18n.js             Spanish/English strings + language switching
+  telemetry.js        optional anonymous game log (Firestore), off unless configured
+  firebase-config.js  Firebase web config + admin e-mail
   main.js             the app shell: wires menu, HUD, AI turn loop together
 tests/run.mjs         dependency-free sanity checks (`npm test`)
 test/                 OFF-by-default visual lab (see test/README.md)
+admin/                private dashboard + game replay (Firebase; see docs/FIREBASE.md)
+firebase/             Firestore security rules
 docs/
   RULES.md / RULES.es.md                game rules + historical sources
   ARCHITECTURE.md / ARCHITECTURE.es.md  this file
