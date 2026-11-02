@@ -119,3 +119,13 @@ diapositivas arman un pequeño escenario `{ pieces: Map }` y lo entregan a otra
 instancia de `BoardView`. Lo que ve quien aprende es el tablero *real* y el
 cálculo *real* de movimientos y saltos, no una maqueta que pueda desincronizarse
 del juego.
+
+## Contribuir
+
+Issues y pull requests son bienvenidos, en especial de quienes conocen las reglas
+tradicionales con más autoridad que unas guías educativas digitalizadas. La
+geometría exacta del tablero (ver [Topología del tablero](#topología-del-tablero))
+se reconstruyó a partir de un diagrama dibujado a mano y agradecería una segunda
+opinión. `test/` contiene un laboratorio visual (paletas, fichas, efecto CRT,
+tipografías) apagado por defecto: para usarlo en local, pon `ENABLED = true` en
+`test/lab.js`.

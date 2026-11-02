@@ -23,14 +23,14 @@ todo entre sí.
 
 ## Fuentes primarias
 
-1. **Molina, Juan Ignacio.** *Compendio de la historia civil del Reyno de
-   Chile.* Madrid, 1788–1795 (describe lo que vio en el sur de Chile en
+1. **Molina, Juan Ignacio.** *[Compendio de la historia civil del Reyno de
+   Chile](https://www.bibliotecanacionaldigital.gob.cl/visor/BND:8029).* Madrid, 1788–1795 (describe lo que vio en el sur de Chile en
    1776), p. 124 — la descripción escrita más antigua que se conoce; comparó
    el juego con el ajedrez.
-2. **Manquilef, Manuel.** *Comentarios del pueblo araucano II: la jimnasia
-   nacional (juegos, ejercicios y bailes).* Santiago, 1914, pp. 104–105.
-3. **Matus Z., Leotardo.** *Juegos i ejercicios de los antiguos araucanos
-   (contribución al estudio de la etnolojía chilena).* Santiago, 1920, pp.
+2. **Manquilef, Manuel.** *[Comentarios del pueblo araucano II: la jimnasia
+   nacional (juegos, ejercicios y bailes)](https://www.memoriachilena.gob.cl/archivos2/pdfs/MC0008916.pdf).* Santiago, 1914, pp. 104–105.
+3. **Matus Z., Leotardo.** *[Juegos i ejercicios de los antiguos araucanos
+   (contribución al estudio de la etnolojía chilena)](https://publicaciones.mnhn.gob.cl/668/articles-63423_archivo_01.pdf).* Santiago, 1920, pp.
    9–10 — lo describió más cercano a las damas y registró una variante de
    movimiento (ver más abajo).
 4. **[Chile Para Niños — Biblioteca Nacional de Chile](https://www.chileparaninos.gob.cl/639/w3-article-639005.html)**,
@@ -58,19 +58,7 @@ fuentes):
   el punto central superior del cuadrado, el **paso de montaña**, que es la
   única conexión entre ambas figuras (y se cuenta como parte del cuadrado).
 
-Dentro del triángulo, la vertical central se divide en tres pasos iguales; dos
-barras horizontales la cruzan (a un tercio y a dos tercios de la altura) y dos
-verticales más suben desde los extremos de la barra inferior hasta el borde
-superior. Hay un punto donde se juntan dos líneas dibujadas, incluido el lugar
-donde esas verticales laterales cruzan la barra superior. Los puntos interiores
-del triángulo **no tienen diagonales**: solo se mueven por las barras y
-verticales dibujadas, mientras que sus dos lados inclinados se pueden recorrer
-hasta el paso.
-
-Las líneas rectas continúan a través del paso: por ejemplo, el lado inclinado
-derecho del triángulo sigue en la diagonal inferior izquierda del cuadrado, de
-modo que un salto puede cruzar de una figura a la otra por esa línea. Mira
-[`ARCHITECTURE.es.md`](./ARCHITECTURE.es.md#topología-del-tablero) para ver
+Mira [`ARCHITECTURE.es.md`](./ARCHITECTURE.es.md#topología-del-tablero) para ver
 cómo se construye el tablero en el código.
 
 ## Preparación

@@ -184,15 +184,13 @@ const STRINGS = {
   },
 };
 
-const LANG_KEY = 'es';
 export const LANGS = ['es', 'en'];
 let lang = 'es';
 const listeners = new Set();
 
 export function detectLang(saved) {
   if (LANGS.includes(saved)) return saved;
-  const nav = (typeof navigator !== 'undefined' && navigator.language) || LANG_KEY;
-  return nav.toLowerCase().startsWith('es') ? 'es' : 'en';
+  return 'es'; // Spanish by default: it is the game's home language
 }
 
 export function getLang() { return lang; }

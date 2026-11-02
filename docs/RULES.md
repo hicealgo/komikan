@@ -27,15 +27,15 @@ path. — [Fundación Casa Rafael](https://www.casarafael.org.ar/wp-content/uplo
 
 ## Primary sources used
 
-1. **Molina, Juan Ignacio.** *Compendio de la historia civil del Reyno de
-   Chile.* Madrid, 1788–1795 (describing what he saw in southern Chile in
+1. **Molina, Juan Ignacio.** *[Compendio de la historia civil del Reyno de
+   Chile](https://www.bibliotecanacionaldigital.gob.cl/visor/BND:8029).* Madrid, 1788–1795 (describing what he saw in southern Chile in
    1776), p. 124 — the earliest known written description, which likened
    the game to chess.
-2. **Manquilef, Manuel.** *Comentarios del pueblo araucano II: la
-   jimnasia nacional (juegos, ejercicios y bailes).* Santiago, 1914, pp.
+2. **Manquilef, Manuel.** *[Comentarios del pueblo araucano II: la
+   jimnasia nacional (juegos, ejercicios y bailes)](https://www.memoriachilena.gob.cl/archivos2/pdfs/MC0008916.pdf).* Santiago, 1914, pp.
    104–105.
-3. **Matus Z., Leotardo.** *Juegos i ejercicios de los antiguos araucanos
-   (contribución al estudio de la etnolojía chilena).* Santiago, 1920, pp.
+3. **Matus Z., Leotardo.** *[Juegos i ejercicios de los antiguos araucanos
+   (contribución al estudio de la etnolojía chilena)](https://publicaciones.mnhn.gob.cl/668/articles-63423_archivo_01.pdf).* Santiago, 1920, pp.
    9–10 — described the game as closer to draughts/checkers, and recorded
    a movement variant (see below).
 4. **[Chile Para Niños — Biblioteca Nacional de Chile](https://www.chileparaninos.gob.cl/639/w3-article-639005.html)**,
@@ -64,18 +64,7 @@ sources):
   **mountain pass**, which is the one and only connection between the two
   shapes (and is counted as part of the square).
 
-Inside the triangle, the middle vertical is split into three equal steps;
-two horizontal bars cross it (at one third and two thirds of the height) and
-two further verticals rise from the lower bar's ends to the top edge. A
-point sits wherever two drawn lines meet, including where those side
-verticals cross the upper bar. The triangle's inner points have **no
-diagonals** — they only move along the drawn bars and verticals — while its
-two slanted sides are walkable all the way down to the pass.
-
-Straight lines continue through the pass: for example the triangle's right
-slant carries on into the square's down-left diagonal, so a jump can cross
-from one shape into the other along that line. See
-[`ARCHITECTURE.md`](./ARCHITECTURE.md#board-topology) for how the board is
+See [`ARCHITECTURE.md`](./ARCHITECTURE.md#board-topology) for how the board is
 built in code.
 
 ## Setup

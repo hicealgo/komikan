@@ -49,16 +49,16 @@ export class Tutorial {
         <h2 class="tutorial-title"></h2>
         <div class="tutorial-body"></div>
         <svg class="tutorial-demo" role="img" aria-hidden="true"></svg>
-        <div class="tutorial-nav">
-          <button class="btn btn-ghost tutorial-prev"></button>
-          <button class="btn btn-primary tutorial-next"></button>
-        </div>
         <div class="tutorial-practice" hidden>
           <p class="tutorial-practice-text"></p>
           <div class="tutorial-practice-buttons">
             <button class="btn btn-primary" data-side="puma"></button>
             <button class="btn btn-primary" data-side="dog"></button>
           </div>
+        </div>
+        <div class="tutorial-nav">
+          <button class="btn btn-ghost tutorial-prev"></button>
+          <button class="btn btn-primary tutorial-next"></button>
         </div>
       </div>`;
 
@@ -110,10 +110,11 @@ export class Tutorial {
 
     const svg = card.querySelector('.tutorial-demo');
     if (!slide.demo) {
-      svg.hidden = true;
+      // SVG elements have no `.hidden` property, so toggle the attribute itself.
+      svg.setAttribute('hidden', '');
       return;
     }
-    svg.hidden = false;
+    svg.removeAttribute('hidden');
     if (!this.demoView) this.demoView = new BoardView(svg, () => {});
     const state = slide.demo();
 

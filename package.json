@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Open-source digital implementation of Komikán, the traditional Mapuche strategy game.",
   "type": "module",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "test": "node tests/run.mjs"
   }

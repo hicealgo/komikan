@@ -135,3 +135,12 @@ most slides construct a tiny hand-picked `{ pieces: Map }` scenario (e.g.
 second `BoardView` instance. What a newcomer sees during the tutorial is
 therefore the *real* board and the *real* move/jump computation — not a
 mock-up that could quietly drift out of sync with the actual game.
+
+## Contributing
+
+Issues and pull requests are welcome — especially from anyone who can speak to
+the traditional rules with more authority than a set of digitized worksheets. The
+board's exact geometry (see [Board topology](#board-topology)) was reconstructed
+from a hand-drawn diagram and would benefit from a second opinion. `test/` holds
+a visual lab (palettes, pieces, CRT, fonts) that is off by default: to use it
+locally, set `ENABLED = true` in `test/lab.js`.
