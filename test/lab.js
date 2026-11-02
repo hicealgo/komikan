@@ -8,6 +8,21 @@
  * css/styles.css.
  */
 
+// ---------------------------------------------------------------------------
+// OFF BY DEFAULT. This lab is kept in the repo for contributors who want to
+// try new looks, but it is not offered to visitors. To use it locally:
+//   1. set ENABLED = true below,
+//   2. serve the repo (e.g. `python3 -m http.server 8000`),
+//   3. open http://localhost:8000/test/
+// ---------------------------------------------------------------------------
+const ENABLED = false;
+
+if (!ENABLED) {
+  document.body.innerHTML = '<p style="font:16px system-ui;padding:24px;color:#ddd">Laboratorio visual desactivado / Visual lab disabled. '
+    + 'Para activarlo, pon <code>ENABLED = true</code> en <code>test/lab.js</code>. / To enable it, set <code>ENABLED = true</code> in <code>test/lab.js</code>.</p>';
+  throw new Error('visual lab disabled');
+}
+
 const STORE = 'komikan-lab-v1';
 
 // ---------------------------------------------------------------- palettes
@@ -128,13 +143,14 @@ const GROUPS = [
   ] },
 ];
 
+// Defaults = the look currently baked into css/styles.css (light theme).
 const DEFAULTS = {
-  palette: 'tierra', texture: 'liso', textureAmt: 0.5,
-  glyph: 'clasico', shape: 'circulo', pieceScale: 1, pieceStroke: 2, idle: 'ninguna', select: 'pulso',
+  palette: 'lana', texture: 'tejido', textureAmt: 0.5,
+  glyph: 'puntos', shape: 'rombo', pieceScale: 1.1, pieceStroke: 3, idle: 'respirar', select: 'giro',
   edgeW: 3, edgeStyle: 'continua', socketR: 23, socketFill: 'suave', zones: 'ninguno', zoneAmt: 0.2, hints: 'relleno',
-  crt: true, scan: 0.22, scanPitch: 4, vignette: 0.55, rgb: 0, grain: 0, flicker: true, glow: 0, aberration: 2,
-  fontHead: 'Press Start 2P', fontBody: 'VT323', bodySize: 19, headScale: 1, tracking: 0,
-  radius: 10, border: 3, shadow: 'dura', guarda: 'chevron', guardaH: 12,
+  crt: true, scan: 0.1, scanPitch: 2, vignette: 0.1, rgb: 0.2, grain: 0.4, flicker: true, glow: 0, aberration: 2.5,
+  fontHead: 'Press Start 2P', fontBody: 'Pixelify Sans', bodySize: 20, headScale: 1, tracking: 0,
+  radius: 10, border: 3, shadow: 'ninguna', guarda: 'oculta', guardaH: 12,
 };
 
 let state = (() => {
@@ -399,7 +415,7 @@ $('#btn-random').addEventListener('click', () => {
   save(); syncInputs(); apply();
 });
 $('#btn-copy').addEventListener('click', async () => {
-  const lines = ['Mi elección (laboratorio visual de Komikán):'];
+  const lines = ['Elección del laboratorio visual de Komikán:'];
   for (const g of GROUPS) {
     for (const c of g.controls) {
       let v = state[c.key];
@@ -412,7 +428,7 @@ $('#btn-copy').addEventListener('click', async () => {
   }
   lines.push('', JSON.stringify(state));
   const text = lines.join('\n');
-  try { await navigator.clipboard.writeText(text); toast('Copiado: pégamelo en el chat'); }
+  try { await navigator.clipboard.writeText(text); toast('Copiado al portapapeles'); }
   catch { prompt('Copia este texto:', text); }
 });
 $('#btn-collapse').addEventListener('click', () => { $('#panel').classList.add('is-collapsed'); $('#btn-expand').hidden = false; });

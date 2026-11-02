@@ -6,12 +6,13 @@
  */
 
 import { createInitialState, getLegalActions, applyAction, dogsRemaining, pieceAt } from './gameState.js';
-import { chooseAiAction, DIFFICULTIES } from './ai.js';
+import { chooseAiAction } from './ai.js';
 import { BoardView } from './ui.js';
 import { Tutorial } from './tutorial.js';
+import { t, setLang, getLang, detectLang, onLangChange } from './i18n.js';
 
 const SETTINGS_KEY = 'komikan-settings-v1';
-const defaultSettings = { hints: true, crt: true, difficulty: 'medium' };
+const defaultSettings = { hints: true, difficulty: 'medium', theme: 'light', lang: null };
 
 function loadSettings() {
   try {
@@ -35,7 +36,9 @@ const els = {
   btnStartAi: document.getElementById('btn-start-ai'),
   btnTutorial: document.getElementById('btn-tutorial'),
   selectDifficulty: document.getElementById('select-difficulty'),
-  toggleCrt: document.getElementById('toggle-crt'),
+  langEs: document.getElementById('lang-es'),
+  langEn: document.getElementById('lang-en'),
+  btnTheme: document.getElementById('btn-theme'),
   toggleHints: document.getElementById('toggle-hints'),
   board: document.getElementById('board'),
   hudTurn: document.getElementById('hud-turn'),
@@ -51,14 +54,13 @@ const els = {
   tutorialOverlay: document.getElementById('tutorial-overlay'),
 };
 
-document.body.classList.toggle('crt-on', settings.crt);
-els.toggleCrt.checked = settings.crt;
 els.toggleHints.checked = settings.hints;
 els.selectDifficulty.value = settings.difficulty;
 
 let game = null; // the live controller for the current match, see startGame()
 
 function showScreen(name) {
+  document.body.classList.toggle('in-game', name === 'game');
   els.menu.hidden = name !== 'menu';
   els.game.hidden = name !== 'game';
 }
@@ -68,11 +70,31 @@ function showScreen(name) {
 els.btnVsAi.addEventListener('click', () => {
   els.aiOptions.hidden = !els.aiOptions.hidden;
 });
-els.toggleCrt.addEventListener('change', () => {
-  settings.crt = els.toggleCrt.checked;
-  document.body.classList.toggle('crt-on', settings.crt);
+// ---- Language and theme (menu) ----
+function applyTheme() {
+  document.documentElement.dataset.theme = settings.theme;
+  // The button offers the *other* mode.
+  els.btnTheme.textContent = t(settings.theme === 'dark' ? 'menu.themeToLight' : 'menu.themeToDark');
+}
+function applyLangButtons() {
+  els.langEs.classList.toggle('is-active', getLang() === 'es');
+  els.langEn.classList.toggle('is-active', getLang() === 'en');
+  els.langEs.setAttribute('aria-pressed', String(getLang() === 'es'));
+  els.langEn.setAttribute('aria-pressed', String(getLang() === 'en'));
+  applyTheme();
+}
+for (const [btn, code] of [[els.langEs, 'es'], [els.langEn, 'en']]) {
+  btn.addEventListener('click', () => { settings.lang = code; saveSettings(settings); setLang(code); });
+}
+els.btnTheme.addEventListener('click', () => {
+  settings.theme = settings.theme === 'dark' ? 'light' : 'dark';
   saveSettings(settings);
+  applyTheme();
 });
+onLangChange(() => { applyLangButtons(); game?.rerender(); });
+setLang(detectLang(settings.lang));
+applyLangButtons();
+
 els.toggleHints.addEventListener('change', () => {
   settings.hints = els.toggleHints.checked;
   saveSettings(settings);
@@ -104,9 +126,9 @@ els.btnTutorial.addEventListener('click', () => tutorial.open());
 // ---- Game controller ----
 
 const WIN_MESSAGES = {
-  eaten: (state) => `¡El pangui se comió a ${state.capturedDogs} trewa y gana la partida!`,
-  trapped: () => 'Los trewa acorralaron al pangui. ¡Los trewa ganan!',
-  dogs_stuck: () => 'Los trewa ya no tienen ningún movimiento posible. ¡El pangui gana!',
+  eaten: (state) => t('win.eaten', { n: state.capturedDogs }),
+  trapped: () => t('win.trapped'),
+  dogs_stuck: () => t('win.dogsStuck'),
 };
 
 function startGame(config) {
@@ -153,20 +175,20 @@ function startGame(config) {
     els.btnEndTurn.hidden = !state.chain;
 
     if (state.winner) {
-      els.hudTurn.textContent = 'Partida terminada';
+      els.hudTurn.textContent = t('hud.over');
     } else if (aiThinking) {
-      els.hudTurn.textContent = state.turn === 'puma' ? 'La IA piensa como pangui…' : 'La IA piensa como trewa…';
+      els.hudTurn.textContent = t(state.turn === 'puma' ? 'hud.aiPuma' : 'hud.aiDog');
     } else {
-      const who = state.turn === 'puma' ? 'Pangui' : 'Trewa';
-      const control = isHumanTurn(state.turn) ? '(tú)' : '(IA)';
-      els.hudTurn.textContent = `Turno: ${who} ${control}`;
+      const who = t(state.turn === 'puma' ? 'hud.puma' : 'hud.dog');
+      const control = t(isHumanTurn(state.turn) ? 'hud.you' : 'hud.ai');
+      els.hudTurn.textContent = t('hud.turn', { who, control });
     }
   }
 
   function maybeShowWinner() {
     if (!state.winner) return false;
     els.banner.hidden = false;
-    els.bannerText.textContent = WIN_MESSAGES[state.winReason]?.(state) ?? '¡Partida terminada!';
+    els.bannerText.textContent = WIN_MESSAGES[state.winReason]?.(state) ?? t('win.over');
     return true;
   }
 
@@ -224,6 +246,10 @@ function startGame(config) {
   game = {
     config,
     setHints(v) { hintsOn = v; render(); },
+    rerender() {
+      render();
+      if (!els.banner.hidden) maybeShowWinner();
+    },
   };
 
   autoSelectPuma();

@@ -11,6 +11,7 @@
 
 import { BoardView } from './ui.js';
 import { neighborsOf, jumpLanding, idAt } from './board.js';
+import { t, onLangChange } from './i18n.js';
 
 const PUMA_HOME = idAt(0, -4);
 
@@ -18,63 +19,21 @@ function demoState(entries) {
   return { pieces: new Map(entries) };
 }
 
+// Text lives in i18n.js (keys tut.<n>.title / tut.<n>.body); this only
+// describes which demo board each slide shows.
 const SLIDES = [
+  { demo: null },
+  { demo: () => demoState([[PUMA_HOME, 'puma']]) },
+  { demo: () => demoState([[PUMA_HOME, 'puma']]), highlightMovesFrom: PUMA_HOME },
   {
-    title: 'La leyenda',
-    body: `Cuando se acerca el frío del invierno, el <strong>pangui</strong> (el puma) baja
-      hambriento desde la cordillera hacia el valle, buscando comida. Los
-      <strong>trewa</strong> (los perros) que custodian la ruka intentan cerrarle el
-      paso antes de que llegue.<br><br>
-      Así se cuenta el origen de este antiguo juego de estrategia mapuche: uno
-      contra doce, cada bando con un objetivo distinto.`,
-    demo: null,
-  },
-  {
-    title: 'El tablero',
-    body: `El tablero tiene dos zonas unidas por un único paso: la <strong>montaña</strong>
-      (el triángulo, arriba) y el <strong>valle</strong> (el cuadrado, abajo, donde
-      está la ruka). El pangui empieza en la montaña; los doce trewa empiezan
-      en el extremo más lejano del valle.`,
-    demo: () => demoState([[PUMA_HOME, 'puma']]),
-  },
-  {
-    title: 'Cómo se mueven',
-    body: `Cada turno, una ficha se mueve <strong>un solo paso</strong>, siguiendo
-      cualquier línea dibujada del tablero — hacia adelante, atrás, o en
-      diagonal. El pangui y los trewa se mueven igual; la diferencia está en
-      lo que pueden hacer al llegar. Prueba: los puntos resaltados son todos
-      los movimientos posibles desde aquí.`,
-    demo: () => demoState([[PUMA_HOME, 'puma']]),
-    highlightMovesFrom: PUMA_HOME,
-  },
-  {
-    title: 'La cacería',
-    body: `Solo el <strong>pangui</strong> puede comer. Si un trewa está en una línea recta
-      junto a él y el punto siguiente está vacío, el pangui salta por encima
-      y se lo come — igual que en las damas. Los trewa nunca pueden comerse
-      al pangui, solo bloquearlo.`,
     demo: () => demoState([[idAt(0, 6), 'puma'], [idAt(0, 3), 'dog']]),
     highlightJumpFrom: idAt(0, 6),
   },
   {
-    title: 'Saltos encadenados',
-    body: `Si después de comer a un trewa hay otro salto disponible, el pangui
-      puede seguir comiendo en el mismo turno — incluso <strong>cambiando de
-      dirección</strong>. En este ejemplo, el pangui puede saltar hacia el norte y
-      luego, sin perder el turno, seguir hacia el este.`,
     demo: () => demoState([[idAt(0, 6), 'puma'], [idAt(0, 3), 'dog'], [idAt(3, 0), 'dog']]),
     highlightJumpFrom: idAt(0, 6),
   },
-  {
-    title: 'Cómo se gana',
-    body: `El <strong>pangui gana</strong> si logra comerse suficientes trewa (9 de 12, en la
-      variante clásica que usa este juego).<br><br>
-      Los <strong>trewa ganan</strong> si logran acorralar al pangui hasta dejarlo sin
-      ningún movimiento posible.<br><br>
-      Es un juego desigual a propósito: cada bando tiene una cantidad de
-      fichas distinta y una manera distinta de ganar.`,
-    demo: null,
-  },
+  { demo: null },
 ];
 
 export class Tutorial {
@@ -85,24 +44,25 @@ export class Tutorial {
     this.demoView = null;
     this.overlay.innerHTML = `
       <div class="tutorial-card">
-        <button class="tutorial-close" aria-label="Cerrar tutorial">&times;</button>
+        <button class="tutorial-close" aria-label="">&times;</button>
         <div class="tutorial-dots"></div>
         <h2 class="tutorial-title"></h2>
         <div class="tutorial-body"></div>
         <svg class="tutorial-demo" role="img" aria-hidden="true"></svg>
         <div class="tutorial-nav">
-          <button class="btn btn-ghost tutorial-prev">Anterior</button>
-          <button class="btn btn-primary tutorial-next">Siguiente</button>
+          <button class="btn btn-ghost tutorial-prev"></button>
+          <button class="btn btn-primary tutorial-next"></button>
         </div>
         <div class="tutorial-practice" hidden>
-          <p>Practica ahora mismo, contra una IA suave y con pistas activadas:</p>
+          <p class="tutorial-practice-text"></p>
           <div class="tutorial-practice-buttons">
-            <button class="btn btn-primary" data-side="puma">Practicar como Pangui</button>
-            <button class="btn btn-primary" data-side="dog">Practicar como Trewa</button>
+            <button class="btn btn-primary" data-side="puma"></button>
+            <button class="btn btn-primary" data-side="dog"></button>
           </div>
         </div>
       </div>`;
 
+    onLangChange(() => { if (!this.overlay.hidden) this.renderSlide(); });
     this.overlay.querySelector('.tutorial-close').addEventListener('click', () => this.close());
     this.overlay.querySelector('.tutorial-prev').addEventListener('click', () => this.go(-1));
     this.overlay.querySelector('.tutorial-next').addEventListener('click', () => this.go(1));
@@ -130,8 +90,15 @@ export class Tutorial {
   renderSlide() {
     const slide = SLIDES[this.index];
     const card = this.overlay.querySelector('.tutorial-card');
-    card.querySelector('.tutorial-title').textContent = slide.title;
-    card.querySelector('.tutorial-body').innerHTML = slide.body;
+    const n = this.index + 1;
+    card.querySelector('.tutorial-title').textContent = t(`tut.${n}.title`);
+    card.querySelector('.tutorial-body').innerHTML = t(`tut.${n}.body`);
+    card.querySelector('.tutorial-close').setAttribute('aria-label', t('tut.close'));
+    card.querySelector('.tutorial-prev').textContent = t('tut.prev');
+    card.querySelector('.tutorial-next').textContent = t('tut.next');
+    card.querySelector('.tutorial-practice-text').textContent = t('tut.practice');
+    card.querySelector('[data-side="puma"]').textContent = t('tut.asPuma');
+    card.querySelector('[data-side="dog"]').textContent = t('tut.asDog');
 
     const dots = card.querySelector('.tutorial-dots');
     dots.innerHTML = SLIDES.map((_, i) => `<span class="dot${i === this.index ? ' is-active' : ''}"></span>`).join('');

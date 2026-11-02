@@ -1,5 +1,7 @@
 # Architecture
 
+*Leer en español: [ARCHITECTURE.es.md](./ARCHITECTURE.es.md)*
+
 This is a static site: plain HTML, CSS and JavaScript ES modules, no
 build step, no dependencies, no backend. Open `index.html` through any
 web server (or GitHub Pages) and it runs. That was a deliberate choice —
@@ -8,54 +10,51 @@ to deploy.
 
 ```
 index.html          the page shell: menu, HUD, board <svg>, overlays
-css/styles.css       all styling: layout, retro CRT effect, theme
+css/styles.css       all styling: layout, light/dark themes, retro CRT effect
 js/
   board.js           the board as a graph (nodes, edges, jump lines)
   gameState.js        the rules engine (pure functions over a state object)
   ai.js               minimax opponent, both sides, three difficulties
   ui.js               renders the board to <svg>, turns clicks into node ids
   tutorial.js          the onboarding slides (reuses ui.js for live demos)
+  i18n.js             Spanish/English strings + language switching
   main.js             the app shell: wires menu, HUD, AI turn loop together
 tests/run.mjs         dependency-free sanity checks (`npm test`)
+test/                 OFF-by-default visual lab (see test/README.md)
 docs/
-  RULES.md            game rules + historical sources
-  ARCHITECTURE.md      this file
+  RULES.md / RULES.es.md                game rules + historical sources
+  ARCHITECTURE.md / ARCHITECTURE.es.md  this file
 ```
 
 ## Why a graph, not a grid
 
-The Komikán board isn't a plain grid — it's a 5×5 lattice (the valley)
-fused to an irregular 13-point triangular lattice (the mountain), joined
-at a single point. Modelling it as a graph (`js/board.js`) rather than a
-2D array means the same movement/capture code works for both zones
-without any special-casing, and the renderer just draws whatever's in the
-graph — it doesn't know or care that the board has an unusual shape.
+The Komikán board isn't a plain grid — it's a 5×5 square joined at a single
+point to an inverted triangle whose inner points have no diagonals.
+Modelling it as a graph (`js/board.js`) rather than a 2D array means the
+same movement/capture code works everywhere, and the renderer just draws
+whatever's in the graph — it doesn't know or care about the board's shape.
 
 ### Board topology
 
-`board.js` builds two things at module load:
+`board.js` is built straight from the **drawn lines** of the physical board.
+Coordinates are integers in thirds of a unit (so the triangle's 1/3 and 2/3
+divisions are whole numbers); the origin `(0, 0)` is the mountain pass, the
+square extends to `y = 12` and the triangle up to `y = -6`.
 
-- **`adjacency`**: `Map<nodeId, Set<nodeId>>` — which points a single
-  step can reach. Generated programmatically for the valley (a perfect
-  grid, so "the 8 neighbours of (r, c)" is just arithmetic), and listed by
-  hand for the mountain (`MOUNTAIN_EDGES`), since its shape isn't regular.
-- **`jumpMap`**: `Map<"A|B", C>` — if a piece sits at `A` and there's a
-  dog at `B`, it may jump to `C`. This is *not* derived from the
-  adjacency graph automatically, because "the next point in the same
-  straight line" isn't well-defined on an irregular lattice — it has to
-  be told which triples of points are actually collinear. For the valley
-  this is generated from the grid geometry (reflect two steps in one of
-  the 8 directions); for the mountain it's a short hand-authored list of
-  the visible straight lines (`MOUNTAIN_JUMP_LINES`), covering the two
-  outer ridgelines, the two horizontal rows, and the pass into the
-  valley. See [`RULES.md`](./RULES.md#the-board) for why that's the
-  right interpretation of the source diagram, and what was necessarily a
-  judgment call.
+- **`LINES`**: every drawn line, as an ordered run of points. Movement edges
+  are simply the consecutive points on each run, so adding or removing a
+  point (or a whole line) is a one-line change. The board is currently
+  38 points: 25 in the square + 13 in the triangle.
+- **`adjacency`**: `Map<nodeId, Set<nodeId>>`, derived from `LINES`.
+- **`jumpMap`**: `Map<"A|B", C>` — a piece at `A` may jump over a dog at `B`
+  to land on `C`. It is *derived from geometry*: `A→B` and `B→C` must be
+  consecutive steps along the same straight line (collinear, same direction).
+  That is why the triangle's right slant continues through the pass into the
+  square's diagonal without any special-casing.
+- **`START`**: the starting squares for the puma and the 12 dogs.
 
-Coordinates (`x, y`, used only for rendering) were chosen so the two
-mountain ridgelines render as visually straight lines, which is a nice
-side effect of them being geometrically consistent, not a requirement of
-the game logic — the logic only ever consults `jumpMap`, never geometry.
+`tests/run.mjs` pins the important facts: the 38-point count, the diagonals
+that exist (and don't), the pass being the only link, and the jumps through it.
 
 ## The rules engine (`gameState.js`)
 
@@ -109,7 +108,16 @@ tokens and a handful of CSS classes (`is-selected`, `is-legal-move`,
 `is-legal-jump`). Pieces are small hand-authored 7×7 pixel bitmaps turned
 into `<rect>` elements at draw time (see `GLYPHS` in `ui.js`) rather than
 image files, so the whole app has zero binary assets to fetch, cache, or
-attribute.
+attribute. A selected piece always gets a ring (`is-selected`), whether or
+not move hints are on.
+
+## Language, theme and look (`i18n.js`, `styles.css`)
+
+All user-facing text lives in `js/i18n.js` (Spanish and English). Static text
+carries `data-i18n` attributes; dynamic text calls `t('key')`. Light and dark
+themes are two sets of CSS variables on `:root` / `:root[data-theme='dark']`.
+`test/` holds a throw-away visual lab used to choose the current look; it is
+disabled by default.
 
 ## The app shell (`main.js`)
 

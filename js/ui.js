@@ -14,28 +14,31 @@
 import { BOARD, neighborsOf } from './board.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const PIECE_RADIUS = 17;
+const PIECE_RADIUS = 18.7; // pieces are diamonds (rombos) of this "radius"
+const SOCKET_RADIUS = 23;
 const PADDING = 34;
 
-// 7x7 bitmaps, 1 = filled pixel. Deliberately simple/iconic, not literal.
+// 7x7 bitmaps, 1 = filled pixel. Deliberately minimal: a solid block for the
+// pangui and a small plus for the trewa (the sides are told apart mainly by
+// colour, so these only need to stay legible at any board size).
 const GLYPHS = {
   puma: [
-    '0100010',
-    '0111110',
-    '1111111',
-    '1101011',
-    '1111111',
-    '0111110',
-    '0101010',
+    '0000000',
+    '0000000',
+    '0011100',
+    '0011100',
+    '0011100',
+    '0000000',
+    '0000000',
   ],
   dog: [
-    '0100010',
-    '1111111',
-    '1111111',
-    '1101011',
-    '1111111',
-    '0111110',
-    '0010100',
+    '0000000',
+    '0000000',
+    '0001000',
+    '0011100',
+    '0001000',
+    '0000000',
+    '0000000',
   ],
 };
 
@@ -87,6 +90,7 @@ export class BoardView {
     const w = Math.max(...xs) - Math.min(...xs) + PADDING * 2;
     const h = Math.max(...ys) - Math.min(...ys) + PADDING * 2;
     this.svg.setAttribute('viewBox', `${minX} ${minY} ${w} ${h}`);
+    this.svg.style.aspectRatio = `${w} / ${h}`; // lets CSS size the board by height alone
 
     const edgeLayer = el('g', { class: 'layer-edges' });
     const seen = new Set();
@@ -106,7 +110,7 @@ export class BoardView {
     const socketLayer = el('g', { class: 'layer-sockets' });
     for (const n of nodes) {
       const socket = el('circle', {
-        cx: n.x, cy: n.y, r: PIECE_RADIUS + 6,
+        cx: n.x, cy: n.y, r: SOCKET_RADIUS,
         class: `board-socket board-socket--${n.zone}`,
         'data-node': n.id,
       });
@@ -140,8 +144,9 @@ export class BoardView {
         transform: `translate(${x}, ${y})`,
         'data-node': nodeId,
       });
-      if (nodeId === selected) g.appendChild(el('circle', { r: PIECE_RADIUS + 6, class: 'piece-ring' }));
-      g.appendChild(el('circle', { r: PIECE_RADIUS, class: `piece-base piece-base--${kind}` }));
+      if (nodeId === selected) g.appendChild(el('circle', { r: PIECE_RADIUS * 1.35, class: 'piece-ring' }));
+      const d = PIECE_RADIUS * 1.15;
+      g.appendChild(el('polygon', { points: `0,${-d} ${d},0 0,${d} ${-d},0`, class: `piece-base piece-base--${kind}` }));
       g.appendChild(buildGlyph(kind));
       g.addEventListener('click', (e) => { e.stopPropagation(); this.onNodeClick(nodeId); });
       this.pieceLayer.appendChild(g);

@@ -1,5 +1,7 @@
 # Komikán — rules and sources
 
+*Leer en español: [RULES.es.md](./RULES.es.md)*
+
 Komikán ("the one that eats everything") is a traditional two-player
 strategy game of the Mapuche people, documented since at least 1776. It
 belongs to the same family as other "hunt games" found worldwide — Bagh
@@ -48,30 +50,41 @@ path. — [Fundación Casa Rafael](https://www.casarafael.org.ar/wp-content/uplo
 
 ## The board
 
-38 points in total, in two joined zones:
+38 points in total, in two joined shapes (the count comes straight from the
+sources):
 
-- **The valley** (*el cuadrado*): a 5×5 lattice — 25 points — where every
-  cell has both diagonals drawn, so interior points connect in all 8
-  directions (like a king in chess). This is where the ruka stands, and
-  where the trewa start.
-- **The mountain** (*el triángulo*): a 13-point triangular lattice above
-  the valley, where the pangui starts. It narrows from a 5-point row at
-  the top down to a single point — the mountain pass — that joins onto the
-  valley's top-centre point.
+- **The valley** (*el cuadrado*, the square): a 4×4-unit square with a 5×5
+  lattice of points — 25 points. Each of its four 2×2 quadrants has an "X"
+  drawn across it, so only the quadrant corners and centres have diagonal
+  moves; the points halfway along a quadrant edge connect orthogonally only.
+  This is where the ruka stands and where the trewa start.
+- **The mountain** (*el triángulo*, the triangle): an inverted triangle
+  sitting on top of the square, 4 units wide at the top and 2 units tall,
+  with **13** points. Its tip is the square's top-centre point, the
+  **mountain pass**, which is the one and only connection between the two
+  shapes (and is counted as part of the square).
 
-The point count (25 + 13 = 38) is explicitly given by the sources. The
-exact wiring of the mountain's narrow lower section (the last few points
-before the pass) had to be interpreted from the published diagram, since
-that part is hand-drawn and not a regular grid; see
-[`ARCHITECTURE.md`](./ARCHITECTURE.md#board-topology) for exactly how it
-was modelled and why.
+Inside the triangle, the middle vertical is split into three equal steps;
+two horizontal bars cross it (at one third and two thirds of the height) and
+two further verticals rise from the lower bar's ends to the top edge. A
+point sits wherever two drawn lines meet, including where those side
+verticals cross the upper bar. The triangle's inner points have **no
+diagonals** — they only move along the drawn bars and verticals — while its
+two slanted sides are walkable all the way down to the pass.
+
+Straight lines continue through the pass: for example the triangle's right
+slant carries on into the square's down-left diagonal, so a jump can cross
+from one shape into the other along that line. See
+[`ARCHITECTURE.md`](./ARCHITECTURE.md#board-topology) for how the board is
+built in code.
 
 ## Setup
 
-- **1 pangui/komikelu** (the puma), starting in the mountain.
+- **1 pangui/komikelu** (the puma), starting in the middle of the mountain
+  (the centre point of the upper bar).
 - **12 trewa** (the dogs), starting at the valley's edge farthest from the
   mountain — filling its two bottom rows plus the two outer corners of the
-  row above them, mirroring the piece layout given in the Chile Para Niños
+  second row, mirroring the piece layout given in the Chile Para Niños
   diagram.
 
 ## Turn order and movement
